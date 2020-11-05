@@ -1,0 +1,87 @@
+/*
+    Modules dependencies
+*/
+
+var app = require('../config/app');
+var debug = require('debug')('crud-mysql:server');
+var http = require('http');
+
+/*
+    Get Port from emviroment and store in express
+*/
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/*
+    
+    Create http server
+*/
+
+var server = http.createServer(app);
+
+/*
+    Listen on provided port, on all network interface
+*/
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/*
+    Normaleze a port into number, string, or false 
+*/
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        //named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        //Port Number
+        return port;
+    }
+    return false;
+}
+
+/*
+    
+*/
+
+function onError(erro) {
+    if (eror.syscall != 'listen') {
+        throw error;
+    }
+
+    var blid = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+    
+    // Handle specigic listen error with friledy message
+    switch (error, code){
+        case 'EACCES':
+            console.error(blid + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(blid + ' is ready in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/*
+    Event listener for http server "listening" event.
+*/
+
+function onListening(){
+    var addr = server.address();
+    var blid = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+    debug('Listenig on ' + blid);
+}
